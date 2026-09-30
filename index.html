@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Phone Is Lying</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="game">
+        <div class="phone">
+            <div class="status-bar">
+                <span id="time">7:42 PM</span>
+                <div>
+                    📶
+                    🔋 87%
+                </div>
+            </div>
+            <div class="screen">
+                <h1>My Phone</h1>
+                <div class="app-grid">
+                    <button class="app" onclick="openApp('messages')">
+                        <span class="icon">💬</span>
+                        <span>Messages</span>
+                    </button>
+                    <button class="app" onclick="openApp('camera')">
+                        <span class="icon">📷</span>
+                        <span>Camera</span>
+                    </button>
+                    <button class="app" onclick="openApp('calls')">
+                        <span class="icon">📞</span>
+                        <span>Calls</span>
+                    </button>
+                    <button class="app" onclick="openApp('browser')">
+                        <span class="icon">🌐</span>
+                        <span>Browser</span>
+                    </button>
+                    <button class="app" onclick="openApp('notes')">
+                        <span class="icon">📝</span>
+                        <span>Notes</span>
+                    </button>
+                    <button class="app" onclick="openApp('maps')">
+                        <span class="icon">🗺️</span>
+                        <span>Maps</span>
+                    </button>
+                    <button class="app" onclick="openApp('gallery')">
+                        <span class="icon">📸</span>
+                        <span>Gallery</span>
+                    </button>
+                    <button class="app" onclick="openApp('settings')">
+                        <span class="icon">⚙️</span>
+                        <span>Settings</span>
+                    </button>
+                </div>
+            </div>
+            <div class="navigation">
+                <button>◁</button>
+                <button>●</button>
+                <button>▢</button>
+            </div>
+        </div>
+    </main>
+    <div id="appWindow" class="app-window hidden">
+        <div class="app-header">
+            <button onclick="closeApp()">←</button>
+            <h2 id="appTitle">App</h2>
+        </div>
+        <div id="appContent" class="app-content">
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
