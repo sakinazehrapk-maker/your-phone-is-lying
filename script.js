@@ -46,6 +46,26 @@ let phoneState = {
             phone: "0312-7654321"
         }
     ],
+    calls: [
+    {
+        name: "Sarah",
+        phone: "0300-1234567",
+        type: "incoming",
+        time: "Yesterday, 6:42 PM"
+    },
+    {
+        name: "Ali",
+        phone: "0312-7654321",
+        type: "outgoing",
+        time: "Yesterday, 3:18 PM"
+    },
+    {
+        name: "Unknown",
+        phone: "0301-9876543",
+        type: "missed",
+        time: "September 29, 11:47 PM"
+    }
+],
     photos: [
     {
         id: 1,
@@ -159,6 +179,10 @@ function openApp(app) {
     }
     if (app === "notes") {
         openNotes();
+        return;
+    }
+    if (app === "calls") {
+        openCalls();
         return;
     }
     appTitle.textContent = getAppName(app);
@@ -574,6 +598,123 @@ function getCurrentDate() {
         "December"
     ];
     return `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+}
+function openCalls() {
+    appTitle.textContent = "Calls";
+    let html = `
+        <div class="calls-header">
+            <button onclick="showContactsForCall()">＋ New Call</button>
+        </div>
+      <div class="call-list">
+    `;
+    phoneState.calls.forEach(function(call) {
+        let icon = "↙";
+        let className = "incoming";
+        if (call.type === "outgoing") {
+            icon = "↗";
+            className = "outgoing";
+        }
+        if (call.type === "missed") {
+            icon = "↙";
+            className = "missed";
+        }
+        html += `
+            <div class="call-item"
+                 onclick="openCallContact('${call.phone}')">
+                <div class="call-avatar">
+                    ${call.name.charAt(0)}
+                </div>
+                <div class="call-info">
+                    <strong>${call.name}</strong>
+                    <p class="${className}">
+                        ${icon} ${call.type}
+                    </p>
+                </div>
+                <div class="call-time">
+                    ${call.time}
+                </div>
+            </div>
+        `;
+    });
+    html += `
+        </div>
+    `;
+    appContent.innerHTML = html;
+}
+function openCallContact(phone) {
+    const contact = phoneState.contacts.find(function(contact) {
+        return contact.phone === phone;
+    });
+    if (!contact) {
+        startCall("Unknown", phone);
+        return;
+    }
+    appTitle.textContent = contact.name;
+    appContent.innerHTML = `
+        <div class="call-contact">
+            <div class="big-call-avatar">
+                ${contact.name.charAt(0)}
+            </div>
+            <h2>${contact.name}</h2>
+            <p>${contact.phone}</p>
+            <button class="call-button"
+                    onclick="startCall('${contact.name}', '${contact.phone}')">
+                📞 Call
+            </button>
+        </div>
+    `;
+}
+function showContactsForCall() {
+    appTitle.textContent = "New Call";
+    let html = `
+        <div class="contacts-call-list">
+            <h3>Contacts</h3>
+    `;
+    phoneState.contacts.forEach(function(contact) {
+        html += `
+            <div class="call-contact-item"
+                 onclick="startCall('${contact.name}', '${contact.phone}')">
+                <div class="call-avatar">
+                    ${contact.name.charAt(0)}
+                </div>
+                <div>
+                    <strong>${contact.name}</strong>
+                    <p>${contact.phone}</p>
+                </div>
+            </div>
+        `;
+    });
+    html += `</div>`;
+    appContent.innerHTML = html;
+}
+function startCall(name, phone) {
+    appTitle.textContent = "Calling";
+    appContent.innerHTML = `
+        <div class="active-call">
+            <div class="big-call-avatar">
+                ${name.charAt(0)}
+            </div>
+            <h2>${name}</h2>
+            <p>${phone}</p>
+            <div class="calling-text">
+                Calling...
+            </div>
+            <button class="end-call-button"
+                    onclick="endCall('${name}', '${phone}')">
+                ☎
+            </button>
+        </div>
+    `;
+}
+function endCall(name, phone) {
+    phoneState.calls.unshift({
+        name: name,
+        phone: phone,
+        type: "outgoing",
+        time: getCurrentTime()
+    });
+    savePhone();
+    openCalls();
 }
 updateClock();
 setInterval(updateClock, 1000);
