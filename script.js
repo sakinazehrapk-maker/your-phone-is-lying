@@ -2,6 +2,59 @@ const appWindow = document.getElementById("appWindow");
 const appTitle = document.getElementById("appTitle");
 const appContent = document.getElementById("appContent");
 
+let phoneState = {
+    messages: {
+        sarah: [
+            {
+                sender: "them",
+                text: "Hey, are you coming?",
+                time: "2:30 PM"
+            },
+            {
+                sender: "me",
+                text: "Yeah, probably.",
+                time: "2:30 PM"
+            },
+            {
+                sender: "them",
+                text: "Okay, let me know.",
+                time: "2:31 PM"
+            }
+        ],
+        ali: [
+            {
+                sender: "them",
+                text: "Did you finish it?",
+                time: "1:10 PM"
+            },
+            {
+                sender: "me",
+                text: "Not yet.",
+                time: "1:12 PM"
+            }
+        ]
+    },
+    contacts: [
+        {
+            id: "sarah",
+            name: "Sarah",
+            phone: "0300-1234567"
+        },
+        {
+            id: "ali",
+            name: "Ali",
+            phone: "0312-7654321"
+        }
+    ],
+    photos: [],
+    browserHistory: [],
+    notes: [],
+    locations: [],
+    story: {
+        chapter: 1,
+        events: []
+    }
+};
 function openApp(app) {
     appWindow.classList.remove("hidden");
     if (app === "messages") {
@@ -30,49 +83,6 @@ function getAppName(app) {
     };
     return names[app];
 }
-const conversations = [
-    {
-        id: "sarah",
-        name: "Sarah",
-        lastMessage: "Hey, are you coming?",
-        time: "2:31 PM",
-        messages: [
-            {
-                sender: "them",
-                text: "Hey, are you coming?",
-                time: "2:30 PM"
-            },
-            {
-                sender: "me",
-                text: "Yeah, probably.",
-                time: "2:30 PM"
-            },
-            {
-                sender: "them",
-                text: "Okay, let me know.",
-                time: "2:31 PM"
-            }
-        ]
-    },
-    {
-        id: "ali",
-        name: "Ali",
-        lastMessage: "Did you finish it?",
-        time: "1:12 PM",
-        messages: [
-            {
-                sender: "them",
-                text: "Did you finish it?",
-                time: "1:10 PM"
-            },
-            {
-                sender: "me",
-                text: "Not yet.",
-                time: "1:12 PM"
-            }
-        ]
-    }
-];
 function openMessages() {
     appTitle.textContent = "Messages";
     let html = "";
