@@ -1,4 +1,4 @@
-const appWindow = document.getElementById("appWindow");
+const appWindow = document.getElementById("appScreen");
 const appTitle = document.getElementById("appTitle");
 const appContent = document.getElementById("appContent");
 
@@ -68,7 +68,7 @@ function loadPhone() {
     }
 }
 function openApp(app) {
-    appWindow.classList.remove("hidden");
+    appScreen.classList.remove("hidden");
     if (app === "messages") {
         openMessages();
         return;
@@ -80,7 +80,7 @@ function openApp(app) {
     `;
 }
 function closeApp() {
-    appWindow.classList.add("hidden");
+    appScreen.classList.add("hidden");
 }
 function getAppName(app) {
     const names = {
