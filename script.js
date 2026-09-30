@@ -179,6 +179,12 @@ function updateClock() {
     document.getElementById("time").textContent =
         `${hours}:${minutes} ${ampm}`;
 }
+function goHome() {
+    appScreen.classList.add("hidden");
+}
+function goBack() {
+    appScreen.classList.add("hidden");
+}
 updateClock();
 setInterval(updateClock, 1000);
 loadPhone();
