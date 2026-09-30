@@ -333,6 +333,70 @@ function openBrowser() {
         </div>
     `;
 }
+function searchWeb() {
+    const input = document.getElementById("searchInput");
+    const query = input.value.trim();
+    if (query === "") {
+        return;
+    }
+    phoneState.browserHistory.push({
+        query: query,
+        time: getCurrentTime()
+    });
+    savePhone();
+    showSearchResults(query);
+}
+function showSearchResults(query) {
+    appTitle.textContent = "Search";
+    appContent.innerHTML = `
+        <div class="search-results">
+            <div class="search-box">
+                <input
+                    id="searchInput"
+                    type="text"
+                    value="${query}"
+                    onkeydown="handleSearch(event)"
+                >
+                <button onclick="searchWeb()">
+                    🔍
+                </button>
+            </div>
+            <div class="result">
+                <small>example.com</small>
+                <h3>
+                    Search results for "${query}"
+                </h3>
+                <p>
+                    These are simulated search results
+                    inside the game.
+                </p>
+            </div>
+            <div class="result">
+                <small>information.net</small>
+                <h3>
+                    More information about ${query}
+                </h3>
+                <p>
+                    This is another fake result.
+                </p>
+            </div>
+            <div class="result">
+                <small>web.example</small>
+                <h3>
+                    Everything you need to know
+                </h3>
+                <p>
+                    Your search results appear here.
+                </p>
+            </div>
+        </div>
+    `;
+}
+function handleSearch(event) {
+    if (event.key === "Enter") {
+        searchWeb();
+    }
+}
 updateClock();
 setInterval(updateClock, 1000);
 loadPhone();
