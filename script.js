@@ -1,7 +1,7 @@
 const appWindow = document.getElementById("appScreen");
 const appTitle = document.getElementById("appTitle");
 const appContent = document.getElementById("appContent");
-
+let currentApp = "home";
 let phoneState = {
     messages: {
         sarah: [
@@ -68,6 +68,7 @@ function loadPhone() {
     }
 }
 function openApp(app) {
+    currentApp = app;
     appScreen.classList.remove("hidden");
     if (app === "messages") {
         openMessages();
@@ -80,6 +81,7 @@ function openApp(app) {
     `;
 }
 function closeApp() {
+    currentApp = "home";
     appScreen.classList.add("hidden");
 }
 function getAppName(app) {
