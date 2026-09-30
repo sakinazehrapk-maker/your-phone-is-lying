@@ -55,6 +55,18 @@ let phoneState = {
         events: []
     }
 };
+function savePhone() {
+    localStorage.setItem(
+        "phoneState",
+        JSON.stringify(phoneState)
+    );
+}
+function loadPhone() {
+    const savedPhone = localStorage.getItem("phoneState");
+    if (savedPhone) {
+        phoneState = JSON.parse(savedPhone);
+    }
+}
 function openApp(app) {
     appWindow.classList.remove("hidden");
     if (app === "messages") {
@@ -154,5 +166,7 @@ function sendMessage(id) {
         text: text,
         time: "now"
     });
+    savePhone();
     openConversation(id);
 }
+loadPhone();
