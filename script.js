@@ -397,6 +397,37 @@ function handleSearch(event) {
         searchWeb();
     }
 }
+function openBrowserHistory() {
+    appTitle.textContent = "History";
+    let html = `
+        <div class="history">
+            <h3>Today</h3>
+    `;
+    phoneState.browserHistory
+        .slice()
+        .reverse()
+        .forEach(function(item) {
+            html += `
+                <div class="history-item">
+                    <div class="history-icon">
+                        🌐
+                    </div>
+                    <div>
+                        <strong>
+                            ${item.query}
+                        </strong>
+                        <p>
+                            ${item.time}
+                        </p>
+                    </div>
+                </div>
+            `;
+        });
+    html += `
+        </div>
+    `;
+    appContent.innerHTML = html;
+}
 updateClock();
 setInterval(updateClock, 1000);
 loadPhone();
