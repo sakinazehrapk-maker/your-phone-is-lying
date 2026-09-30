@@ -96,7 +96,20 @@ let phoneState = {
         image: "https://picsum.photos/id/106/600/600"
     }
 ],
-    browserHistory: [],
+    browserHistory: [
+    {
+        query: "weather Karachi",
+        time: "9:14 AM"
+    },
+    {
+        query: "easy pasta recipe",
+        time: "11:42 AM"
+    },
+    {
+        query: "javascript arrays",
+        time: "3:08 PM"
+    }
+],
     notes: [],
     locations: [],
     story: {
@@ -125,6 +138,10 @@ function openApp(app) {
     }
     if (app === "gallery") {
         openGallery();
+        return;
+    }
+    if (app === "browser") {
+        openBrowser();
         return;
     }
     appTitle.textContent = getAppName(app);
@@ -280,6 +297,39 @@ function openPhoto(id) {
                 <p>${photo.time}</p>
                 <p>📍 ${photo.location}</p>
             </div>
+        </div>
+    `;
+}
+function openBrowser() {
+    appTitle.textContent = "Browser";
+    appContent.innerHTML = `
+        <div class="browser">
+            <div class="search-box">
+                <input
+                    id="searchInput"
+                    type="text"
+                    placeholder="Search the web..."
+                    onkeydown="handleSearch(event)"
+                >
+                <button onclick="searchWeb()">
+                    🔍
+                </button>
+            </div>
+            <div class="browser-home">
+                <div class="browser-logo">
+                    🌐
+                </div>
+                <h2>Search</h2>
+                <p>
+                    Search the internet
+                </p>
+            </div>
+            <button
+                class="history-button"
+                onclick="openBrowserHistory()"
+            >
+                View History
+            </button>
         </div>
     `;
 }
