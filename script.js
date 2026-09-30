@@ -557,6 +557,24 @@ function deleteNote(id) {
     savePhone();
     openNotes();
 }
+function getCurrentDate() {
+    const now = new Date();
+    const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ];
+    return `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+}
 updateClock();
 setInterval(updateClock, 1000);
 loadPhone();
