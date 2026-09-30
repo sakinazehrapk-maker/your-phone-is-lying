@@ -1,0 +1,128 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body{
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #151515;
+    font-family: Arial, sans-serif;
+}
+.phone{
+    width: 300px;
+    height: 760px;
+    background: #050505;
+    border: 8px solid #222;
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+.status-bar{
+    height: 35px;
+    padding: 0 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-size: 13px;
+}
+.screen{
+    height: calc(100% - 85px);
+    padding: 25px 20px;
+    background: linear-gradient(
+        160deg,
+        #161616,
+        #252525
+    );
+    color: white;
+}
+.screen h1{
+    font-size: 28px;
+    margin-bottom: 35px;
+}
+.app-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px 15px;
+}
+.app{
+    border: none;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+}
+.icon{
+    width: 58px;
+    height: 58px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #333;
+    border-radius: 16px;
+    font-size: 28px;
+    transition: transform 0.15s;
+}
+.app:hover .icon{
+    transform: scale(1.08);
+}
+.navigation{
+    height: 50px;
+    background: #080808;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.navigation-button{
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+.app-window{
+    position: absolute;
+    width: 390px;
+    height: 780px;
+    background: #111;
+    color: white;
+    border-radius: 40px;
+    overflow: hidden;
+    transform: 0.2s;
+}
+.hidden{
+    display: none;
+}
+.app-header {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    background: #1d1d1d;
+    border-bottom: 1px solid #333;
+}
+.app-header button {
+    border: none;
+    background: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+}
+.app-header h2 {
+    font-size: 20px;
+}
+.app-content {
+    padding: 25px;
+
+    font-size: 16px;
+    line-height: 1.5;
+}
