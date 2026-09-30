@@ -428,6 +428,17 @@ function openBrowserHistory() {
     `;
     appContent.innerHTML = html;
 }
+function getCurrentTime() {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = String(
+        now.getMinutes()
+    ).padStart(2, "0");
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours || 12;
+    return `${hours}:${minutes} ${ampm}`;
+}
 updateClock();
 setInterval(updateClock, 1000);
 loadPhone();
