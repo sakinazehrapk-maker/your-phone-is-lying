@@ -110,7 +110,20 @@ let phoneState = {
         time: "3:08 PM"
     }
 ],
-    notes: [],
+    notes: [
+    {
+        id: 1,
+        title: "Things to do",
+        content: "Buy groceries\nFinish my assignment\nCall Sarah",
+        date: "September 29, 2026"
+    },
+    {
+        id: 2,
+        title: "Project ideas",
+        content: "Build something with Arduino\nMaybe make a game",
+        date: "September 30, 2026"
+    }
+],
     locations: [],
     story: {
         chapter: 1,
@@ -142,6 +155,10 @@ function openApp(app) {
     }
     if (app === "browser") {
         openBrowser();
+        return;
+    }
+    if (app === "notes") {
+        openNotes();
         return;
     }
     appTitle.textContent = getAppName(app);
@@ -438,6 +455,107 @@ function getCurrentTime() {
     hours = hours % 12;
     hours = hours || 12;
     return `${hours}:${minutes} ${ampm}`;
+}
+function openNotes() {
+    appTitle.textContent = "Notes";
+    let html = `
+        <div class="notes-header">
+            <button onclick="createNote()">
+                ＋ New Note
+            </button>
+        </div>
+        <div class="notes-list">
+    `;
+    phoneState.notes.forEach(function(note) {
+        html += `
+            <div
+                class="note-item"
+                onclick="openNote(${note.id})"
+            >
+                <div class="note-title">
+                    ${note.title}
+                </div>
+                <div class="note-preview">
+                    ${note.content.substring(0, 60)}
+                </div>
+                <div class="note-date">
+                    ${note.date}
+                </div>
+            </div>
+        `;
+    });
+    html += `
+        </div>
+    `;
+    appContent.innerHTML = html;
+}
+function openNote(id) {
+    const note = phoneState.notes.find(function(note) {
+        return note.id === id;
+    });
+    appTitle.textContent = "Edit Note";
+    appContent.innerHTML = `
+        <div class="note-editor">
+            <input
+                id="noteTitle"
+                type="text"
+                value="${note.title}"
+                placeholder="Title"
+            >
+            <textarea
+                id="noteContent"
+                placeholder="Write something..."
+            >${note.content}</textarea>
+            <div class="note-buttons">
+                <button onclick="saveNote(${note.id})">
+                    Save
+                </button>
+                <button
+                    class="delete-button"
+                    onclick="deleteNote(${note.id})"
+                >
+                    Delete
+                </button>
+            </div>
+        </div>
+    `;
+}
+function saveNote(id) {
+    const note = phoneState.notes.find(function(note) {
+        return note.id === id;
+    });
+    const title =
+        document.getElementById("noteTitle").value.trim();
+    const content =
+        document.getElementById("noteContent").value.trim();
+    if (title === "") {
+        alert("Please enter a title.");
+        return;
+    }
+    note.title = title;
+    note.content = content;
+    note.date = getCurrentDate();
+    savePhone();
+    openNotes();
+}
+function createNote() {
+    const newNote = {
+        id: Date.now(),
+        title: "New Note",
+        content: "",
+        date: getCurrentDate()
+    };
+    phoneState.notes.push(newNote);
+    savePhone();
+    openNote(newNote.id);
+}
+function deleteNote(id) {
+    phoneState.notes =
+        phoneState.notes.filter(function(note) {
+            return note.id !== id;
+        });
+    savePhone();
+    openNotes();
 }
 updateClock();
 setInterval(updateClock, 1000);
