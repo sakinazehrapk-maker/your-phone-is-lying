@@ -86,19 +86,21 @@ function getAppName(app) {
 function openMessages() {
     appTitle.textContent = "Messages";
     let html = "";
-    conversations.forEach(function(conversation) {
+    phoneState.contacts.forEach(function(contact) {
+        const messages = phoneState.messages[contact.id];
+        const lastMessage = messages[messages.length - 1];
         html += `
             <div class="conversation"
-                 onclick="openConversation('${conversation.id}')">
+                 onclick="openConversation('${contact.id}')">
                 <div class="conversation-avatar">
-                    ${conversation.name.charAt(0)}
+                    ${contact.name.charAt(0)}
                 </div>
                 <div class="conversation-info">
                     <div class="conversation-top">
-                        <strong>${conversation.name}</strong>
-                        <span>${conversation.time}</span>
+                        <strong>${contact.name}</strong>
+                        <span>${lastMessage.time}</span>
                     </div>
-                    <p>${conversation.lastMessage}</p>
+                    <p>${lastMessage.text}</p>
                 </div>
             </div>
         `;
@@ -106,14 +108,15 @@ function openMessages() {
     appContent.innerHTML = html;
 }
 function openConversation(id) {
-    const conversation = conversations.find(function(item) {
-        return item.id === id;
+    const contact = phoneState.contacts.find(function(contact) {
+        return contact.id === id;
     });
-    appTitle.textContent = conversation.name;
+    const messages = phoneState.messages[id];
+    appTitle.textContent = contact.name;
     let html = `
         <div class="chat">
     `;
-    conversation.messages.forEach(function(message) {
+    messages.forEach(function(message) {
         html += `
             <div class="message-row ${message.sender}">
                 <div class="message-bubble">
@@ -133,7 +136,7 @@ function openConversation(id) {
                 type="text"
                 placeholder="Type a message..."
             >
-            <button onclick="sendMessage('${conversation.id}')">
+            <button onclick="sendMessage('${id}')">
                 Send
             </button>
         </div>
@@ -146,14 +149,10 @@ function sendMessage(id) {
     if (text === "") {
         return;
     }
-    const conversation = conversations.find(function(item) {
-        return item.id === id;
-    });
-    conversation.messages.push({
+    phoneState.messages[id].push({
         sender: "me",
         text: text,
         time: "now"
     });
-    conversation.lastMessage = text;
     openConversation(id);
 }
