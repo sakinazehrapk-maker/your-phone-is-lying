@@ -46,7 +46,56 @@ let phoneState = {
             phone: "0312-7654321"
         }
     ],
-    photos: [],
+    photos: [
+    {
+        id: 1,
+        name: "IMG_1001.jpg",
+        date: "September 28, 2026",
+        time: "4:32 PM",
+        location: "Karachi",
+        image: "https://picsum.photos/id/1015/600/600"
+    },
+    {
+        id: 2,
+        name: "IMG_1002.jpg",
+        date: "September 28, 2026",
+        time: "5:18 PM",
+        location: "Karachi",
+        image: "https://picsum.photos/id/1011/600/600"
+    },
+    {
+        id: 3,
+        name: "IMG_1003.jpg",
+        date: "September 29, 2026",
+        time: "12:47 PM",
+        location: "Karachi",
+        image: "https://picsum.photos/id/1025/600/600"
+    },
+    {
+        id: 4,
+        name: "IMG_1004.jpg",
+        date: "September 29, 2026",
+        time: "7:03 PM",
+        location: "Karachi",
+        image: "https://picsum.photos/id/1035/600/600"
+    },
+    {
+        id: 5,
+        name: "IMG_1005.jpg",
+        date: "September 30, 2026",
+        time: "10:21 AM",
+        location: "Karachi",
+        image: "https://picsum.photos/id/1043/600/600"
+    },
+    {
+        id: 6,
+        name: "IMG_1006.jpg",
+        date: "September 30, 2026",
+        time: "3:45 PM",
+        location: "Karachi",
+        image: "https://picsum.photos/id/106/600/600"
+    }
+],
     browserHistory: [],
     notes: [],
     locations: [],
@@ -72,6 +121,10 @@ function openApp(app) {
     appScreen.classList.remove("hidden");
     if (app === "messages") {
         openMessages();
+        return;
+    }
+    if (app === "gallery") {
+        openGallery();
         return;
     }
     appTitle.textContent = getAppName(app);
@@ -186,6 +239,49 @@ function goHome() {
 }
 function goBack() {
     appScreen.classList.add("hidden");
+}
+function openGallery() {
+    appTitle.textContent = "Gallery";
+    let html = `
+        <div class="gallery">
+    `;
+    phoneState.photos.forEach(function(photo) {
+        html += `
+            <div
+                class="photo"
+                onclick="openPhoto(${photo.id})"
+            >
+                <img
+                    src="${photo.image}"
+                    alt="${photo.name}"
+                >
+            </div>
+        `;
+    });
+    html += `
+        </div>
+    `;
+    appContent.innerHTML = html;
+}
+function openPhoto(id) {
+    const photo = phoneState.photos.find(function(photo) {
+        return photo.id === id;
+    });
+    appTitle.textContent = photo.name;
+    appContent.innerHTML = `
+        <div class="photo-viewer">
+            <img
+                src="${photo.image}"
+                alt="${photo.name}"
+            >
+            <div class="photo-details">
+                <strong>${photo.name}</strong>
+                <p>${photo.date}</p>
+                <p>${photo.time}</p>
+                <p>📍 ${photo.location}</p>
+            </div>
+        </div>
+    `;
 }
 updateClock();
 setInterval(updateClock, 1000);
