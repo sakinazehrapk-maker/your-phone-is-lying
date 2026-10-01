@@ -1262,7 +1262,7 @@ function checkStoryProgress() {
         triggerStoryEvent("first_message");
     }
 }
-function showNotification(title, message, icon = "🔔") {
+function showNotification(title, message, icon = "🔔", action = null) {
     const container =
         document.getElementById("notificationContainer");
     const notification =
@@ -1277,48 +1277,61 @@ function showNotification(title, message, icon = "🔔") {
             <p>${message}</p>
         </div>
     `;
+    if (action) {
+        notification.style.pointerEvents = "auto";
+        notification.style.cursor = "pointer";
+        notification.onclick = function() {
+            action();
+            notification.remove();
+        };
+    }
     container.appendChild(notification);
     setTimeout(function() {
         notification.classList.add("notification-hide");
-    }, 3500);
+    }, 5000);
     setTimeout(function() {
         notification.remove();
-    }, 4000);
+    }, 5500);
 }
 function phoneEvent(type, data = {}) {
     if (type === "notification") {
         showNotification(
             data.title || "Phone",
             data.message || "",
-            data.icon || "🔔"
+            data.icon || "🔔",
+            data.action || null
         );
     }
     if (type === "message") {
         showNotification(
             "Messages",
             data.message || "New message",
-            "💬"
+            "💬",
+            data.action || null
         );
     }
     if (type === "call") {
         showNotification(
             "Incoming Call",
             `${data.name || "Unknown"} is calling`,
-            "📞"
+            "📞",
+            data.action || null
         );
     }
     if (type === "location") {
         showNotification(
             "Maps",
             "Location history updated",
-            "📍"
+            "📍",
+            data.action || null
         );
     }
     if (type === "photo") {
         showNotification(
             "Photos",
             "New photo added",
-            "📸"
+            "📸",
+            data.action || null
         );
     }
 }

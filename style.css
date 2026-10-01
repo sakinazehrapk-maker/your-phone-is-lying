@@ -1121,3 +1121,10 @@ body{
 .system-notification {
     border-color: #555;
 }
+.notification:hover {
+    transform: scale(1.02);
+    background: rgba(50, 50, 50, 0.98);
+}
+.notification:active {
+    transform: scale(0.98);
+}
