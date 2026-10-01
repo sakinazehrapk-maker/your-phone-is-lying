@@ -144,7 +144,26 @@ let phoneState = {
         date: "September 30, 2026"
     }
 ],
-    locations: [],
+    locations: [
+    {
+        id: 1,
+        name: "Home",
+        address: "Karachi",
+        time: "Today, 8:15 AM"
+    },
+    {
+        id: 2,
+        name: "University",
+        address: "Karachi",
+        time: "Today, 9:30 AM"
+    },
+    {
+        id: 3,
+        name: "Coffee Shop",
+        address: "Clifton, Karachi",
+        time: "Yesterday, 5:42 PM"
+    }
+],
     story: {
         chapter: 1,
         events: []
@@ -187,6 +206,10 @@ function openApp(app) {
     }
     if (app === "camera") {
         openCamera();
+        return;
+    }
+    if (app === "maps") {
+        openMaps();
         return;
     }
     appTitle.textContent = getAppName(app);
@@ -786,6 +809,86 @@ function switchCamera() {
     } else {
         preview.textContent = "CAMERA";
     }
+}
+function openMaps() {
+    appTitle.textContent = "Maps";
+    appContent.innerHTML = `
+        <div class="maps">
+            <div class="map-search">
+                <input
+                    id="mapSearch"
+                    type="text"
+                    placeholder="Search Maps..."
+                    onkeydown="handleMapSearch(event)"
+                >
+                <button onclick="searchMap()">
+                    🔍
+                </button>
+            </div>
+            <div class="fake-map">
+                <div class="road road-one"></div>
+                <div class="road road-two"></div>
+                <div class="road road-three"></div>
+                <div class="map-water"></div>
+                <div class="map-label label-one">
+                    Karachi
+                </div>
+                <div class="map-label label-two">
+                    Clifton
+                </div>
+                <div class="map-pin pin-one">
+                    📍
+                </div>
+                <div class="map-pin pin-two">
+                    📍
+                </div>
+            </div>
+            <button class="location-history-button"
+                    onclick="openLocationHistory()">
+                🕘 Location History
+            </button>
+        </div>
+    `;
+}
+function searchMap() {
+    const input = document.getElementById("mapSearch");
+    if (!input) return;
+    const query = input.value.trim();
+    if (query === "") return;
+    showMapSearchResult(query);
+}
+function handleMapSearch(event) {
+    if (event.key === "Enter") {
+        searchMap();
+    }
+}
+function showMapSearchResult(query) {
+    appTitle.textContent = "Maps";
+    appContent.innerHTML = `
+        <div class="map-result">
+            <div class="fake-map small-map">
+                <div class="road road-one"></div>
+                <div class="road road-two"></div>
+                <div class="map-pin search-pin">
+                    📍
+                </div>
+            </div>
+            <div class="location-result">
+                <div class="location-result-icon">
+                    📍
+                </div>
+                <div>
+                    <h3>${query}</h3>
+                    <p>Karachi, Pakistan</p>
+                </div>
+            </div>
+            <button
+                class="save-location-button"
+                onclick="saveLocation('${query}')">
+                ＋ Save Location
+            </button>
+        </div>
+    `;
 }
 updateClock();
 setInterval(updateClock, 1000);
