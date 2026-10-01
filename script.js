@@ -166,6 +166,20 @@ let phoneState = {
 ],
     story: {
     chapter: 1,
+    flags: {
+        openedMessages: false,
+        openedGallery: false,
+        openedBrowser: false,
+        openedCalls: false,
+        openedCamera: false,
+        openedMaps: false,
+        openedSettings: false,
+        firstMessageReceived: false,
+        strangePhotoFound: false,
+        strangeSearchFound: false,
+        strangeLocationFound: false,
+        unknownCallerFound: false
+    },
     events: []
 },
 settings: {
@@ -1156,6 +1170,31 @@ function showDeviceInfo() {
             </div>
         </div>
     `;
+}
+function triggerStoryEvent(eventName) {
+    if (phoneState.story.events.includes(eventName)) {
+        return;
+    }
+    phoneState.story.events.push(eventName);
+    savePhone();
+    handleStoryEvent(eventName);
+}
+function handleStoryEvent(eventName) {
+    if (eventName === "first_message") {
+        firstStoryMessage();
+    }
+    if (eventName === "strange_photo") {
+        createStrangePhoto();
+    }
+    if (eventName === "strange_search") {
+        createStrangeSearch();
+    }
+    if (eventName === "strange_location") {
+        createStrangeLocation();
+    }
+    if (eventName === "unknown_caller") {
+        createUnknownCaller();
+    }
 }
 updateClock();
 setInterval(updateClock, 1000);
