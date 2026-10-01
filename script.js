@@ -266,7 +266,18 @@ function openMessages() {
     savePhone();
     appTitle.textContent = "Messages";
     let html = "";
-    phoneState.contacts.forEach(function(contact) {
+    let contactsToShow = [...phoneState.contacts];
+if (
+    phoneState.messages.you &&
+    phoneState.story.flags.firstMessageReceived
+) {
+    contactsToShow.push({
+        id: "you",
+        name: "You",
+        phone: ""
+    });
+}
+contactsToShow.forEach(function(contact) {
         const messages = phoneState.messages[contact.id];
         const lastMessage = messages[messages.length - 1];
         html += `
@@ -289,9 +300,16 @@ function openMessages() {
     checkStoryProgress();
 }
 function openConversation(id) {
-    const contact = phoneState.contacts.find(function(contact) {
-        return contact.id === id;
-    });
+    let contact = phoneState.contacts.find(function(contact) {
+    return contact.id === id;
+});
+if (id === "you") {
+    contact = {
+        id: "you",
+        name: "You",
+        phone: ""
+    };
+}
     const messages = phoneState.messages[id];
     appTitle.textContent = contact.name;
     let html = `
