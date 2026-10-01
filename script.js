@@ -1233,7 +1233,9 @@ function firstStoryMessage() {
         time: getCurrentTime()
     });
     savePhone();
-    alert("New message received.");
+    phoneEvent("message", {
+    message: "New message from You"
+});
 }
 function checkStoryProgress() {
     const flags = phoneState.story.flags;
