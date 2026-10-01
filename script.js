@@ -1310,6 +1310,11 @@ function phoneEvent(type, data = {}) {
         );
     }
 }
+function schedulePhoneEvent(type, data, delay) {
+    setTimeout(function() {
+        phoneEvent(type, data);
+    }, delay);
+}
 updateClock();
 setInterval(updateClock, 1000);
 loadPhone();
