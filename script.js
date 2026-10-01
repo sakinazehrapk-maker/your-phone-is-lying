@@ -185,6 +185,10 @@ function openApp(app) {
         openCalls();
         return;
     }
+    if (app === "camera") {
+        openCamera();
+        return;
+    }
     appTitle.textContent = getAppName(app);
     appContent.innerHTML = `
         <h3>${getAppName(app)}</h3>
@@ -715,6 +719,73 @@ function endCall(name, phone) {
     });
     savePhone();
     openCalls();
+}
+function openCamera() {
+    appTitle.textContent = "Camera";
+    appContent.innerHTML = `
+        <div class="camera">
+            <div class="camera-preview">
+                <div class="camera-preview-text">
+                    CAMERA
+                </div>
+            </div>
+            <div class="camera-controls">
+                <button class="camera-gallery-button"
+                        onclick="openGallery()">
+                    🖼️
+                </button>
+                <button class="shutter-button"
+                        onclick="takePhoto()">
+                    <span></span>
+                </button>
+                <button class="camera-switch-button"
+                        onclick="switchCamera()">
+                    🔄
+                </button>
+            </div>
+        </div>
+    `;
+}
+function takePhoto() {
+    const photoNumber = phoneState.photos.length + 1;
+    const newPhoto = {
+        id: Date.now(),
+        name: `IMG_${1000 + photoNumber}.jpg`,
+        date: getCurrentDate(),
+        time: getCurrentTime(),
+        location: "Karachi",
+        image: `https://picsum.photos/seed/${Date.now()}/600/600`
+    };
+    phoneState.photos.push(newPhoto);
+    savePhone();
+    showPhotoTaken(newPhoto);
+}
+function showPhotoTaken(photo) {
+    appTitle.textContent = "Photo Taken";
+    appContent.innerHTML = `
+        <div class="photo-taken">
+            <img src="${photo.image}" alt="${photo.name}">
+            <h3>${photo.name}</h3>
+            <p>${photo.date}</p>
+            <p>${photo.time}</p>
+            <div class="photo-actions">
+                <button onclick="openGallery()">
+                    🖼️ Gallery
+                </button>
+                <button onclick="openCamera()">
+                    📷 Camera
+                </button>
+            </div>
+        </div>
+    `;
+}
+function switchCamera() {
+    const preview = document.querySelector(".camera-preview-text");
+    if (preview.textContent === "CAMERA") {
+        preview.textContent = "FRONT CAMERA";
+    } else {
+        preview.textContent = "CAMERA";
+    }
 }
 updateClock();
 setInterval(updateClock, 1000);
