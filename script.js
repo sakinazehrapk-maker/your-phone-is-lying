@@ -262,6 +262,8 @@ function getAppName(app) {
     return names[app];
 }
 function openMessages() {
+    phoneState.story.flags.openedMessages = true;
+    savePhone();
     appTitle.textContent = "Messages";
     let html = "";
     phoneState.contacts.forEach(function(contact) {
@@ -1195,6 +1197,18 @@ function handleStoryEvent(eventName) {
     if (eventName === "unknown_caller") {
         createUnknownCaller();
     }
+}
+function firstStoryMessage() {
+    if (!phoneState.messages.you) {
+        phoneState.messages.you = [];
+    }
+    phoneState.messages.you.push({
+        sender: "them",
+        text: "Why did you leave me there?",
+        time: getCurrentTime()
+    });
+    savePhone();
+    alert("New message received.");
 }
 updateClock();
 setInterval(updateClock, 1000);
