@@ -1,4 +1,4 @@
-const appWindow = document.getElementById("appScreen");
+const appScreen = document.getElementById("appScreen");
 const appTitle = document.getElementById("appTitle");
 const appContent = document.getElementById("appContent");
 let currentApp = "home";
@@ -1164,6 +1164,40 @@ function showBattery() {
             <p class="battery-note">
                 Battery usage is simulated.
             </p>
+        </div>
+    `;
+}
+function showStorage() {
+    appTitle.textContent = "Storage";
+    appContent.innerHTML = `
+        <div class="storage-screen">
+            <div class="storage-circle">
+                <strong>42.7 GB</strong>
+                <span>used</span>
+            </div>
+            <h2>Phone Storage</h2>
+            <p>42.7 GB of 128 GB used</p>
+            <div class="storage-bar">
+                <div class="storage-fill"></div>
+            </div>
+            <div class="storage-list">
+                <div>
+                    <span>📸 Photos</span>
+                    <strong>18.2 GB</strong>
+                </div>
+                <div>
+                    <span>💬 Messages</span>
+                    <strong>2.4 GB</strong>
+                </div>
+                <div>
+                    <span>📱 Apps</span>
+                    <strong>15.8 GB</strong>
+                </div>
+                <div>
+                    <span>📁 Other</span>
+                    <strong>6.3 GB</strong>
+                </div>
+            </div>
         </div>
     `;
 }
