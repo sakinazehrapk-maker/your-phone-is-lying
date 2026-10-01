@@ -1271,6 +1271,43 @@ function showNotification(title, message, icon = "🔔") {
         notification.remove();
     }, 4000);
 }
+function phoneEvent(type, data = {}) {
+    if (type === "notification") {
+        showNotification(
+            data.title || "Phone",
+            data.message || "",
+            data.icon || "🔔"
+        );
+    }
+    if (type === "message") {
+        showNotification(
+            "Messages",
+            data.message || "New message",
+            "💬"
+        );
+    }
+    if (type === "call") {
+        showNotification(
+            "Incoming Call",
+            `${data.name || "Unknown"} is calling`,
+            "📞"
+        );
+    }
+    if (type === "location") {
+        showNotification(
+            "Maps",
+            "Location history updated",
+            "📍"
+        );
+    }
+    if (type === "photo") {
+        showNotification(
+            "Photos",
+            "New photo added",
+            "📸"
+        );
+    }
+}
 updateClock();
 setInterval(updateClock, 1000);
 loadPhone();
