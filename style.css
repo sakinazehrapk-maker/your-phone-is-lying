@@ -1118,3 +1118,6 @@ body{
         transform: translateY(-15px);
     }
 }
+.system-notification {
+    border-color: #555;
+}

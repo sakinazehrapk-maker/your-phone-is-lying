@@ -1222,6 +1222,9 @@ function handleStoryEvent(eventName) {
     if (eventName === "unknown_caller") {
         createUnknownCaller();
     }
+    if (eventName === "strange_notification") {
+        strangeNotification();
+    }
 }
 function firstStoryMessage() {
     if (!phoneState.messages.you) {
@@ -1236,6 +1239,15 @@ function firstStoryMessage() {
     phoneEvent("message", {
     message: "New message from You"
 });
+schedulePhoneEvent(
+    "notification",
+    {
+        title: "System",
+        message: "Location access was used recently.",
+        icon: "📍"
+    },
+    8000
+);
 }
 function checkStoryProgress() {
     const flags = phoneState.story.flags;
@@ -1314,6 +1326,13 @@ function schedulePhoneEvent(type, data, delay) {
     setTimeout(function() {
         phoneEvent(type, data);
     }, delay);
+}
+function strangeNotification() {
+    phoneEvent("notification", {
+        title: "System",
+        message: "Location access was used recently.",
+        icon: "📍"
+    });
 }
 updateClock();
 setInterval(updateClock, 1000);
