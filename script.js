@@ -1077,6 +1077,12 @@ function openSettings() {
         </div>
     `;
 }
+function toggleWifi() {
+    phoneState.settings.wifi =
+        !phoneState.settings.wifi;
+    savePhone();
+    openSettings();
+}
 updateClock();
 setInterval(updateClock, 1000);
 loadPhone();
