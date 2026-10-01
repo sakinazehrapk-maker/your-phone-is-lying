@@ -1083,6 +1083,18 @@ function toggleWifi() {
     savePhone();
     openSettings();
 }
+function toggleBluetooth() {
+    phoneState.settings.bluetooth =
+        !phoneState.settings.bluetooth;
+    savePhone();
+    openSettings();
+}
+function toggleNotifications() {
+    phoneState.settings.notifications =
+        !phoneState.settings.notifications;
+    savePhone();
+    openSettings();
+}
 updateClock();
 setInterval(updateClock, 1000);
 loadPhone();
