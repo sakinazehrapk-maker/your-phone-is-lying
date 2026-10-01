@@ -165,9 +165,17 @@ let phoneState = {
     }
 ],
     story: {
-        chapter: 1,
-        events: []
-    }
+    chapter: 1,
+    events: []
+},
+settings: {
+    wifi: true,
+    wifiName: "Home Wi-Fi",
+    bluetooth: false,
+    notifications: true,
+    darkMode: true,
+    battery: 87
+}
 };
 function savePhone() {
     localStorage.setItem(
@@ -210,6 +218,10 @@ function openApp(app) {
     }
     if (app === "maps") {
         openMaps();
+        return;
+    }
+    if (app === "settings") {
+        openSettings();
         return;
     }
     appTitle.textContent = getAppName(app);
@@ -925,6 +937,145 @@ function openLocationHistory() {
         </div>
     `;
     appContent.innerHTML = html;
+}
+function openSettings() {
+    appTitle.textContent = "Settings";
+    const settings = phoneState.settings;
+    appContent.innerHTML = `
+        <div class="settings">
+            <div class="settings-profile">
+                <div class="settings-avatar">
+                    Y
+                </div>
+                <div>
+                    <strong>My Phone</strong>
+                    <p>Personal device</p>
+                </div>
+            </div>
+            <div class="settings-section">
+                <h3>Connections</h3>
+                <div class="setting-item"
+                     onclick="toggleWifi()">
+                    <div class="setting-icon">
+                        📶
+                    </div>
+                    <div class="setting-info">
+                        <strong>Wi-Fi</strong>
+                        <p id="wifiStatus">
+                            ${settings.wifi
+                                ? settings.wifiName
+                                : "Off"}
+                        </p>
+                    </div>
+                    <span class="setting-arrow">
+                        ›
+                    </span>
+                </div>
+                <div class="setting-item"
+                     onclick="toggleBluetooth()">
+                    <div class="setting-icon">
+                        🔵
+                    </div>
+                    <div class="setting-info">
+                        <strong>Bluetooth</strong>
+                        <p id="bluetoothStatus">
+                            ${settings.bluetooth
+                                ? "On"
+                                : "Off"}
+                        </p>
+                    </div>
+                    <span class="setting-arrow">
+                        ›
+                    </span>
+                </div>
+            </div>
+            <div class="settings-section">
+                <h3>Device</h3>
+                <div class="setting-item"
+                     onclick="showBattery()">
+                    <div class="setting-icon">
+                        🔋
+                    </div>
+                    <div class="setting-info">
+                        <strong>Battery</strong>
+                        <p>
+                            ${settings.battery}% remaining
+                        </p>
+                    </div>
+                    <span class="setting-arrow">
+                        ›
+                    </span>
+                </div>
+                <div class="setting-item"
+                     onclick="showStorage()">
+                    <div class="setting-icon">
+                        💾
+                    </div>
+                    <div class="setting-info">
+                        <strong>Storage</strong>
+                        <p>
+                            42.7 GB of 128 GB used
+                        </p>
+                    </div>
+                    <span class="setting-arrow">
+                        ›
+                    </span>
+                </div>
+                <div class="setting-item"
+                     onclick="showDeviceInfo()">
+                    <div class="setting-icon">
+                        📱
+                    </div>
+                    <div class="setting-info">
+                        <strong>About Phone</strong>
+                        <p>
+                            Phone information
+                        </p>
+                    </div>
+                    <span class="setting-arrow">
+                        ›
+                    </span>
+                </div>
+            </div>
+            <div class="settings-section">
+                <h3>Preferences</h3>
+                <div class="setting-item"
+                     onclick="toggleNotifications()">
+                    <div class="setting-icon">
+                        🔔
+                    </div>
+                    <div class="setting-info">
+                        <strong>Notifications</strong>
+                        <p id="notificationStatus">
+                            ${settings.notifications
+                                ? "On"
+                                : "Off"}
+                        </p>
+                    </div>
+                    <span class="setting-arrow">
+                        ›
+                    </span>
+                </div>
+                <div class="setting-item"
+                     onclick="toggleDarkMode()">
+                    <div class="setting-icon">
+                        🌙
+                    </div>
+                    <div class="setting-info">
+                        <strong>Dark Mode</strong>
+                        <p id="darkModeStatus">
+                            ${settings.darkMode
+                                ? "On"
+                                : "Off"}
+                        </p>
+                    </div>
+                    <span class="setting-arrow">
+                        ›
+                    </span>
+                </div>
+            </div>
+        </div>
+    `;
 }
 updateClock();
 setInterval(updateClock, 1000);
