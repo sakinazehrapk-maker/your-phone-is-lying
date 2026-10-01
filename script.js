@@ -1095,6 +1095,37 @@ function toggleNotifications() {
     savePhone();
     openSettings();
 }
+function toggleDarkMode() {
+    phoneState.settings.darkMode =
+        !phoneState.settings.darkMode;
+    savePhone();
+    openSettings();
+}
+function showBattery() {
+    appTitle.textContent = "Battery";
+    const battery =
+        phoneState.settings.battery;
+    appContent.innerHTML = `
+        <div class="battery-screen">
+            <div class="battery-circle">
+                ${battery}%
+            </div>
+            <h2>Battery</h2>
+            <p>
+                ${battery}% remaining
+            </p>
+            <div class="battery-bar">
+                <div
+                    class="battery-fill"
+                    style="width: ${battery}%">
+                </div>
+            </div>
+            <p class="battery-note">
+                Battery usage is simulated.
+            </p>
+        </div>
+    `;
+}
 updateClock();
 setInterval(updateClock, 1000);
 loadPhone();
