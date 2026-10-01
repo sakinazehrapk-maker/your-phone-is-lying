@@ -1248,6 +1248,29 @@ function checkStoryProgress() {
         triggerStoryEvent("first_message");
     }
 }
+function showNotification(title, message, icon = "🔔") {
+    const container =
+        document.getElementById("notificationContainer");
+    const notification =
+        document.createElement("div");
+    notification.className = "notification";
+    notification.innerHTML = `
+        <div class="notification-icon">
+            ${icon}
+        </div>
+        <div class="notification-content">
+            <strong>${title}</strong>
+            <p>${message}</p>
+        </div>
+    `;
+    container.appendChild(notification);
+    setTimeout(function() {
+        notification.classList.add("notification-hide");
+    }, 3500);
+    setTimeout(function() {
+        notification.remove();
+    }, 4000);
+}
 updateClock();
 setInterval(updateClock, 1000);
 loadPhone();
