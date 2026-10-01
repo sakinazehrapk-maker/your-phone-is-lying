@@ -286,6 +286,7 @@ function openMessages() {
         `;
     });
     appContent.innerHTML = html;
+    checkStoryProgress();
 }
 function openConversation(id) {
     const contact = phoneState.contacts.find(function(contact) {
@@ -354,6 +355,8 @@ function goBack() {
     appScreen.classList.add("hidden");
 }
 function openGallery() {
+    phoneState.story.flags.openedGallery = true;
+    savePhone();
     appTitle.textContent = "Gallery";
     let html = `
         <div class="gallery">
@@ -375,6 +378,7 @@ function openGallery() {
         </div>
     `;
     appContent.innerHTML = html;
+    checkStoryProgress();
 }
 function openPhoto(id) {
     const photo = phoneState.photos.find(function(photo) {
@@ -397,6 +401,8 @@ function openPhoto(id) {
     `;
 }
 function openBrowser() {
+    phoneState.story.flags.openedBrowser = true;
+    savePhone();
     appTitle.textContent = "Browser";
     appContent.innerHTML = `
         <div class="browser">
@@ -428,6 +434,7 @@ function openBrowser() {
             </button>
         </div>
     `;
+    checkStoryProgress();
 }
 function searchWeb() {
     const input = document.getElementById("searchInput");
@@ -1209,6 +1216,19 @@ function firstStoryMessage() {
     });
     savePhone();
     alert("New message received.");
+}
+function checkStoryProgress() {
+    const flags = phoneState.story.flags;
+    if (
+        flags.openedMessages &&
+        flags.openedGallery &&
+        flags.openedBrowser &&
+        !flags.firstMessageReceived
+    ) {
+        flags.firstMessageReceived = true;
+        savePhone();
+        triggerStoryEvent("first_message");
+    }
 }
 updateClock();
 setInterval(updateClock, 1000);
