@@ -1126,6 +1126,37 @@ function showBattery() {
         </div>
     `;
 }
+function showDeviceInfo() {
+    appTitle.textContent = "About Phone";
+    appContent.innerHTML = `
+        <div class="device-info">
+            <div class="device-image">
+                📱
+            </div>
+            <h2>My Phone</h2>
+            <div class="info-row">
+                <span>Model</span>
+                <strong>PX-14</strong>
+            </div>
+            <div class="info-row">
+                <span>Software</span>
+                <strong>PhoneOS 4.2</strong>
+            </div>
+            <div class="info-row">
+                <span>Storage</span>
+                <strong>128 GB</strong>
+            </div>
+            <div class="info-row">
+                <span>Serial Number</span>
+                <strong>PX14-48291</strong>
+            </div>
+            <div class="info-row">
+                <span>Version</span>
+                <strong>4.2.1</strong>
+            </div>
+        </div>
+    `;
+}
 updateClock();
 setInterval(updateClock, 1000);
 loadPhone();
