@@ -890,6 +890,42 @@ function showMapSearchResult(query) {
         </div>
     `;
 }
+function openLocationHistory() {
+    appTitle.textContent = "Location History";
+    let html = `
+        <div class="location-history">
+            <h3>Recent locations</h3>
+    `;
+    if (phoneState.locations.length === 0) {
+        html += `
+            <p class="empty-history">
+                No location history.
+            </p>
+        `;
+    } else {
+        phoneState.locations
+            .slice()
+            .reverse()
+            .forEach(function(location) {
+                html += `
+                    <div class="location-item">
+                        <div class="location-icon">
+                            📍
+                        </div>
+                        <div class="location-info">
+                            <strong>${location.name}</strong>
+                            <p>${location.address}</p>
+                            <small>${location.time}</small>
+                        </div>
+                    </div>
+                `;
+            });
+    }
+    html += `
+        </div>
+    `;
+    appContent.innerHTML = html;
+}
 updateClock();
 setInterval(updateClock, 1000);
 loadPhone();
