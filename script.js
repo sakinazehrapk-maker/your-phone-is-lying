@@ -1381,6 +1381,16 @@ function strangeNotification() {
         icon: "📍"
     });
 }
+function saveLocation(name) {
+    phoneState.locations.push({
+        id: Date.now(),
+        name: name,
+        address: "Karachi, Pakistan",
+        time: getCurrentDate() + ", " + getCurrentTime()
+    });
+    savePhone();
+    openLocationHistory();
+}
 updateClock();
 setInterval(updateClock, 1000);
 loadPhone();
