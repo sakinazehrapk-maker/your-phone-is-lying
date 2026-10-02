@@ -1490,19 +1490,43 @@ function createStrangePhoto() {
     phoneState.photos.push(strangePhoto);
     phoneState.story.flags.strangePhotoFound = true;
     savePhone();
-    phoneEvent("photo", {
-        message: "New photo added",
-        action: function() {
-            openApp("gallery");
-        }
-    });
+phoneEvent("photo", {
+    message: "New photo added",
+    action: function() {
+        openApp("gallery");
+        schedulePhoneEvent(
+            "notification",
+            {
+                title: "Browser",
+                message: "Your browsing history was updated.",
+                icon: "🌐",
+                action: function() {
+                    createStrangeSearch();
+                    openApp("browser");
+                    openBrowserHistory();
+                }
+            },
+            5000
+        );
+    }
+});
 }
+
 function createStrangeSearch() {
+    const alreadyExists = phoneState.browserHistory.some(function(item) {
+        return item.strange;
+    });
+    if (alreadyExists) {
+        phoneState.story.flags.strangeSearchFound = true;
+        savePhone();
+        return;
+    }
     phoneState.browserHistory.push({
         query: "how to disappear completely",
         time: "3:12 AM",
         strange: true
     });
+    phoneState.story.flags.strangeSearchFound = true;
     savePhone();
 }
 function createStrangeLocation() {
