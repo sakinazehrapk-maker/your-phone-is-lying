@@ -1000,6 +1000,26 @@ function openMaps() {
     phoneState.story.flags.openedMaps = true;
     savePhone();
     appTitle.textContent = "Maps";
+    const strangeLocation = phoneState.locations.find(function(location) {
+        return location.strange;
+    });
+    let strangeLocationHTML = "";
+    if (strangeLocation) {
+        strangeLocationHTML = `
+            <div class="map-warning"
+                 onclick="openLocationHistory()">
+                <div class="map-warning-icon">
+                    📍
+                </div>
+                <div>
+                    <strong>${esc(strangeLocation.name)}</strong>
+                    <p>${esc(strangeLocation.address)}</p>
+                    <small>${esc(strangeLocation.time)}</small>
+                </div>
+                <span>›</span>
+            </div>
+        `;
+    }
     appContent.innerHTML = `
         <div class="maps">
             <div class="map-search">
@@ -1031,8 +1051,11 @@ function openMaps() {
                     📍
                 </div>
             </div>
-            <button class="location-history-button"
-                    onclick="openLocationHistory()">
+            ${strangeLocationHTML}
+            <button
+                class="location-history-button"
+                onclick="openLocationHistory()"
+            >
                 🕘 Location History
             </button>
         </div>
@@ -1428,7 +1451,11 @@ function firstStoryMessage() {
         {
             title: "System",
             message: "Location access was used recently.",
-            icon: "📍"
+            icon: "📍",
+            action: function() {
+                createStrangeLocation();
+                openApp("maps");
+            }
         },
         8000
     );
@@ -1461,15 +1488,23 @@ function createStrangeSearch() {
     savePhone();
 }
 function createStrangeLocation() {
+    const alreadyExists = phoneState.locations.some(function(location) {
+        return location.strange;
+    });
+    if (alreadyExists) {
+        phoneState.story.flags.strangeLocationFound = true;
+        savePhone();
+        return;
+    }
     phoneState.locations.unshift({
         id: Date.now(),
         name: "Unknown Location",
-        address: "Karachi, Pakistan",
+        address: "Clifton, Karachi",
         time: "Today, 3:03 AM",
         strange: true
     });
+    phoneState.story.flags.strangeLocationFound = true;
     savePhone();
-    phoneEvent("location");
 }
 function createUnknownCaller() {
     phoneState.calls.unshift({
