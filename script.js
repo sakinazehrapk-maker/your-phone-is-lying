@@ -892,24 +892,46 @@ function showContactsForCall() {
     appContent.innerHTML = html;
 }
 function startCall(name, phone) {
-    backAction = openCalls;
+    backAction = function() {
+        openCalls();
+    };
     appTitle.textContent = "Calling";
     appContent.innerHTML = `
-        <div class="active-call">
-            <div class="big-call-avatar">
-                ${esc(name.charAt(0))}
-            </div>
+        <div class="call-screen">
+            <div class="call-avatar">?</div>
             <h2>${esc(name)}</h2>
             <p>${esc(phone)}</p>
-            <div class="calling-text">
-                Calling...
-            </div>
-            <button class="end-call-button"
-                    onclick="endCall('${name}', '${phone}')">
-                ☎
+            <div id="callStatus">Calling...</div>
+            <button
+                class="end-call-button"
+                onclick="endCall('${esc(name)}', '${esc(phone)}')"
+            >
+                📞 End Call
             </button>
         </div>
     `;
+    if (phone === "0301-9876543") {
+        setTimeout(function() {
+            const status = document.getElementById("callStatus");
+            if (!status) return;
+            status.innerHTML = `
+                <div class="strange-call">
+                    <strong>Connected</strong>
+                    <p>...</p>
+                </div>
+            `;
+            setTimeout(function() {
+                if (!document.getElementById("callStatus")) return;
+                document.getElementById("callStatus").innerHTML = `
+                    <div class="strange-call">
+                        <strong>Connected</strong>
+                        <p>"Why are you calling me?"</p>
+                    </div>
+                `;
+            }, 2500);
+        }, 2000);
+        return;
+    }
 }
 function endCall(name, phone) {
     phoneState.calls.unshift({
