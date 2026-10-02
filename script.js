@@ -691,41 +691,42 @@ function openNotes() {
     appContent.innerHTML = html;
 }
 function openNote(id) {
-    backAction = openNotes;
-    let note = phoneState.notes.find(function(note) {
+    const note = phoneState.notes.find(function(note) {
         return note.id === id;
     });
-    if (!note && draftNote && draftNote.id === id) {
-        note = draftNote;
-    }
-    if (!note) {
+    if (!note) return;
+    backAction = function() {
         openNotes();
+    };
+    appTitle.textContent = note.title;
+    if (note.strange) {
+        appContent.innerHTML = `
+            <div class="note-view strange-note">
+                <div class="note-warning">
+                    ⚠️
+                </div>
+                <h2>${esc(note.title)}</h2>
+                <p class="note-text">
+                    ${esc(note.content)}
+                </p>
+                <div id="strangeNoteMessage"></div>
+            </div>
+        `;
+        setTimeout(function() {
+            const message = document.getElementById("strangeNoteMessage");
+            if (!message) return;
+            message.innerHTML = `
+                <p class="note-reveal">
+                    You weren't supposed to find this.
+                </p>
+            `;
+        }, 3000);
         return;
     }
-    appTitle.textContent = "Edit Note";
     appContent.innerHTML = `
-        <div class="note-editor">
-            <input
-                id="noteTitle"
-                type="text"
-                value="${esc(note.title)}"
-                placeholder="Title"
-            >
-            <textarea
-                id="noteContent"
-                placeholder="Write something..."
-            >${esc(note.content)}</textarea>
-            <div class="note-buttons">
-                <button onclick="saveNote(${note.id})">
-                    Save
-                </button>
-                <button
-                    class="delete-button"
-                    onclick="deleteNote(${note.id})"
-                >
-                    Delete
-                </button>
-            </div>
+        <div class="note-view">
+            <h2>${esc(note.title)}</h2>
+            <p class="note-text">${esc(note.content)}</p>
         </div>
     `;
 }
