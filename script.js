@@ -934,6 +934,30 @@ function startCall(name, phone) {
     }
 }
 function endCall(name, phone) {
+    if (phone === "0301-9876543") {
+        const alreadyExists = phoneState.notes.some(function(note) {
+            return note.strange;
+        });
+        if (!alreadyExists) {
+            phoneState.notes.unshift({
+                id: Date.now(),
+                title: "Don't answer",
+                content: "You already know what happens.",
+                time: getCurrentTime(),
+                strange: true
+            });
+        }
+        phoneState.story.flags.unknownCallerFound = true;
+        savePhone();
+        phoneEvent("note", {
+            message: "New note created",
+            action: function() {
+                openApp("notes");
+            }
+        });
+        openCalls();
+        return;
+    }
     phoneState.calls.unshift({
         name: name,
         phone: phone,
