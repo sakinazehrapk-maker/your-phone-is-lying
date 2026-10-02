@@ -1119,9 +1119,12 @@ function openLocationHistory() {
     } else {
         // The list is stored newest-first, so no reverse() needed
         phoneState.locations.forEach(function(location) {
-            if (location.strange && !phoneState.story.flags.strangeLocationFound) {
+            if (location.strange) {
                 phoneState.story.flags.strangeLocationFound = true;
                 savePhone();
+                if (!phoneState.story.flags.strangePhotoFound) {
+                    createStrangePhoto();
+                }
             }
             html += `
                 <div class="location-item">
@@ -1467,17 +1470,32 @@ function firstStoryMessage() {
     }
 }
 function createStrangePhoto() {
-    phoneState.photos.push({
+    const alreadyExists = phoneState.photos.some(function(photo) {
+        return photo.strange;
+    });
+    if (alreadyExists) {
+        phoneState.story.flags.strangePhotoFound = true;
+        savePhone();
+        return;
+    }
+    const strangePhoto = {
         id: Date.now(),
         name: "IMG_1007.jpg",
         date: getCurrentDate(),
-        time: "3:03 AM",
-        location: "Unknown",
+        time: "3:04 AM",
+        location: "Clifton, Karachi",
         image: "https://picsum.photos/seed/strange-photo/600/600",
         strange: true
-    });
+    };
+    phoneState.photos.push(strangePhoto);
+    phoneState.story.flags.strangePhotoFound = true;
     savePhone();
-    phoneEvent("photo");
+    phoneEvent("photo", {
+        message: "New photo added",
+        action: function() {
+            openApp("gallery");
+        }
+    });
 }
 function createStrangeSearch() {
     phoneState.browserHistory.push({
