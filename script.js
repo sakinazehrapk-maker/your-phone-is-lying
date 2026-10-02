@@ -1528,6 +1528,19 @@ function createStrangeSearch() {
     });
     phoneState.story.flags.strangeSearchFound = true;
     savePhone();
+    schedulePhoneEvent(
+    "notification",
+    {
+        title: "Phone",
+        message: "You have a missed call.",
+        icon: "📞",
+        action: function() {
+            createUnknownCaller();
+            openApp("calls");
+        }
+    },
+    6000
+);
 }
 function createStrangeLocation() {
     const alreadyExists = phoneState.locations.some(function(location) {
@@ -1549,15 +1562,29 @@ function createStrangeLocation() {
     savePhone();
 }
 function createUnknownCaller() {
+    const alreadyExists = phoneState.calls.some(function(call) {
+        return call.strange;
+    });
+    if (alreadyExists) {
+        phoneState.story.flags.unknownCallerFound = true;
+        savePhone();
+        return;
+    }
     phoneState.calls.unshift({
         name: "Unknown",
         phone: "0301-9876543",
         type: "missed",
-        time: "Today, " + getCurrentTime(),
+        time: "Today, 3:17 AM",
         strange: true
     });
+    phoneState.story.flags.unknownCallerFound = true;
     savePhone();
-    phoneEvent("call", { name: "Unknown" });
+    phoneEvent("call", {
+        name: "Unknown",
+        action: function() {
+            openApp("calls");
+        }
+    });
 }
 function checkStoryProgress() {
     const flags = phoneState.story.flags;
