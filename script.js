@@ -2,7 +2,12 @@ const appScreen = document.getElementById("appScreen");
 const appTitle = document.getElementById("appTitle");
 const appContent = document.getElementById("appContent");
 let currentApp = "home";
+const STATE_VERSION = 2;
+let backAction = null;
+let currentMapQuery = "";
+let draftNote = null;
 let phoneState = {
+    version: STATE_VERSION,
     messages: {
         sarah: [
             {
@@ -47,164 +52,202 @@ let phoneState = {
         }
     ],
     calls: [
-    {
-        name: "Sarah",
-        phone: "0300-1234567",
-        type: "incoming",
-        time: "Yesterday, 6:42 PM"
-    },
-    {
-        name: "Ali",
-        phone: "0312-7654321",
-        type: "outgoing",
-        time: "Yesterday, 3:18 PM"
-    },
-    {
-        name: "Unknown",
-        phone: "0301-9876543",
-        type: "missed",
-        time: "September 29, 11:47 PM"
-    }
-],
+        {
+            name: "Sarah",
+            phone: "0300-1234567",
+            type: "incoming",
+            time: "Yesterday, 6:42 PM"
+        },
+        {
+            name: "Ali",
+            phone: "0312-7654321",
+            type: "outgoing",
+            time: "Yesterday, 3:18 PM"
+        },
+        {
+            name: "Unknown",
+            phone: "0301-9876543",
+            type: "missed",
+            time: "September 29, 11:47 PM"
+        }
+    ],
     photos: [
-    {
-        id: 1,
-        name: "IMG_1001.jpg",
-        date: "September 28, 2026",
-        time: "4:32 PM",
-        location: "Karachi",
-        image: "https://picsum.photos/id/1015/600/600"
-    },
-    {
-        id: 2,
-        name: "IMG_1002.jpg",
-        date: "September 28, 2026",
-        time: "5:18 PM",
-        location: "Karachi",
-        image: "https://picsum.photos/id/1011/600/600"
-    },
-    {
-        id: 3,
-        name: "IMG_1003.jpg",
-        date: "September 29, 2026",
-        time: "12:47 PM",
-        location: "Karachi",
-        image: "https://picsum.photos/id/1025/600/600"
-    },
-    {
-        id: 4,
-        name: "IMG_1004.jpg",
-        date: "September 29, 2026",
-        time: "7:03 PM",
-        location: "Karachi",
-        image: "https://picsum.photos/id/1035/600/600"
-    },
-    {
-        id: 5,
-        name: "IMG_1005.jpg",
-        date: "September 30, 2026",
-        time: "10:21 AM",
-        location: "Karachi",
-        image: "https://picsum.photos/id/1043/600/600"
-    },
-    {
-        id: 6,
-        name: "IMG_1006.jpg",
-        date: "September 30, 2026",
-        time: "3:45 PM",
-        location: "Karachi",
-        image: "https://picsum.photos/id/106/600/600"
-    }
-],
+        {
+            id: 1,
+            name: "IMG_1001.jpg",
+            date: "September 28, 2026",
+            time: "4:32 PM",
+            location: "Karachi",
+            image: "https://picsum.photos/id/1015/600/600"
+        },
+        {
+            id: 2,
+            name: "IMG_1002.jpg",
+            date: "September 28, 2026",
+            time: "5:18 PM",
+            location: "Karachi",
+            image: "https://picsum.photos/id/1011/600/600"
+        },
+        {
+            id: 3,
+            name: "IMG_1003.jpg",
+            date: "September 29, 2026",
+            time: "12:47 PM",
+            location: "Karachi",
+            image: "https://picsum.photos/id/1025/600/600"
+        },
+        {
+            id: 4,
+            name: "IMG_1004.jpg",
+            date: "September 29, 2026",
+            time: "7:03 PM",
+            location: "Karachi",
+            image: "https://picsum.photos/id/1035/600/600"
+        },
+        {
+            id: 5,
+            name: "IMG_1005.jpg",
+            date: "September 30, 2026",
+            time: "10:21 AM",
+            location: "Karachi",
+            image: "https://picsum.photos/id/1043/600/600"
+        },
+        {
+            id: 6,
+            name: "IMG_1006.jpg",
+            date: "September 30, 2026",
+            time: "3:45 PM",
+            location: "Karachi",
+            image: "https://picsum.photos/id/106/600/600"
+        }
+    ],
     browserHistory: [
-    {
-        query: "weather Karachi",
-        time: "9:14 AM"
-    },
-    {
-        query: "easy pasta recipe",
-        time: "11:42 AM"
-    },
-    {
-        query: "javascript arrays",
-        time: "3:08 PM"
-    }
-],
+        {
+            query: "weather Karachi",
+            time: "9:14 AM"
+        },
+        {
+            query: "easy pasta recipe",
+            time: "11:42 AM"
+        },
+        {
+            query: "javascript arrays",
+            time: "3:08 PM"
+        }
+    ],
     notes: [
-    {
-        id: 1,
-        title: "Things to do",
-        content: "Buy groceries\nFinish my assignment\nCall Sarah",
-        date: "September 29, 2026"
-    },
-    {
-        id: 2,
-        title: "Project ideas",
-        content: "Build something with Arduino\nMaybe make a game",
-        date: "September 30, 2026"
-    }
-],
+        {
+            id: 1,
+            title: "Things to do",
+            content: "Buy groceries\nFinish my assignment\nCall Sarah",
+            date: "September 29, 2026"
+        },
+        {
+            id: 2,
+            title: "Project ideas",
+            content: "Build something with Arduino\nMaybe make a game",
+            date: "September 30, 2026"
+        }
+    ],
     locations: [
-    {
-        id: 1,
-        name: "Home",
-        address: "Karachi",
-        time: "Today, 8:15 AM"
-    },
-    {
-        id: 2,
-        name: "University",
-        address: "Karachi",
-        time: "Today, 9:30 AM"
-    },
-    {
-        id: 3,
-        name: "Coffee Shop",
-        address: "Clifton, Karachi",
-        time: "Yesterday, 5:42 PM"
-    }
-],
+        {
+            id: 1,
+            name: "Home",
+            address: "Karachi",
+            time: "Today, 8:15 AM"
+        },
+        {
+            id: 2,
+            name: "University",
+            address: "Karachi",
+            time: "Today, 9:30 AM"
+        },
+        {
+            id: 3,
+            name: "Coffee Shop",
+            address: "Clifton, Karachi",
+            time: "Yesterday, 5:42 PM"
+        }
+    ],
     story: {
-    chapter: 1,
-    flags: {
-        openedMessages: false,
-        openedGallery: false,
-        openedBrowser: false,
-        openedCalls: false,
-        openedCamera: false,
-        openedMaps: false,
-        openedSettings: false,
-        firstMessageReceived: false,
-        strangePhotoFound: false,
-        strangeSearchFound: false,
-        strangeLocationFound: false,
-        unknownCallerFound: false
+        chapter: 1,
+        flags: {
+            openedMessages: false,
+            openedGallery: false,
+            openedBrowser: false,
+            openedCalls: false,
+            openedCamera: false,
+            openedMaps: false,
+            openedSettings: false,
+            firstMessageReceived: false,
+            strangePhotoFound: false,
+            strangeSearchFound: false,
+            strangeLocationFound: false,
+            unknownCallerFound: false
+        },
+        events: []
     },
-    events: []
-},
-settings: {
-    wifi: true,
-    wifiName: "Home Wi-Fi",
-    bluetooth: false,
-    notifications: true,
-    darkMode: true,
-    battery: 87
-}
+    settings: {
+        wifi: true,
+        wifiName: "Home Wi-Fi",
+        bluetooth: false,
+        notifications: true,
+        darkMode: true,
+        battery: 87
+    }
 };
+function esc(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
 function savePhone() {
-    localStorage.setItem(
-        "phoneState",
-        JSON.stringify(phoneState)
-    );
+    try {
+        localStorage.setItem(
+            "phoneState",
+            JSON.stringify(phoneState)
+        );
+    } catch (error) {
+        console.warn("Could not save phone state:", error);
+    }
 }
 function loadPhone() {
-    const savedPhone = localStorage.getItem("phoneState");
-    if (savedPhone) {
-        phoneState = JSON.parse(savedPhone);
+    try {
+        const savedPhone = localStorage.getItem("phoneState");
+        if (!savedPhone) {
+            return;
+        }
+        const parsed = JSON.parse(savedPhone);
+        // Old or incompatible save: throw it away and start fresh
+        if (!parsed || parsed.version !== STATE_VERSION) {
+            localStorage.removeItem("phoneState");
+            return;
+        }
+        phoneState = parsed;
+    } catch (error) {
+        console.warn("Bad save data, starting fresh:", error);
+        localStorage.removeItem("phoneState");
     }
+}
+function resetPhone() {
+    localStorage.removeItem("phoneState");
+    location.reload();
+}
+function updateStatusBar() {
+    const statusIcons = document.querySelector(".status-bar div");
+    if (!statusIcons) {
+        return;
+    }
+    statusIcons.textContent =
+        (phoneState.settings.wifi ? "📶 " : "") +
+        "🔋 " + phoneState.settings.battery + "%";
 }
 function openApp(app) {
     currentApp = app;
+    backAction = null;
     appScreen.classList.remove("hidden");
     if (app === "messages") {
         openMessages();
@@ -245,6 +288,12 @@ function openApp(app) {
     `;
 }
 function closeApp() {
+    if (backAction) {
+        const action = backAction;
+        backAction = null;
+        action();
+        return;
+    }
     currentApp = "home";
     appScreen.classList.add("hidden");
 }
@@ -262,36 +311,40 @@ function getAppName(app) {
     return names[app];
 }
 function openMessages() {
+    backAction = null;
     phoneState.story.flags.openedMessages = true;
     savePhone();
     appTitle.textContent = "Messages";
     let html = "";
     let contactsToShow = [...phoneState.contacts];
-if (
-    phoneState.messages.you &&
-    phoneState.story.flags.firstMessageReceived
-) {
-    contactsToShow.push({
-        id: "you",
-        name: "You",
-        phone: ""
-    });
-}
-contactsToShow.forEach(function(contact) {
-        const messages = phoneState.messages[contact.id];
+    if (
+        phoneState.messages.you &&
+        phoneState.story.flags.firstMessageReceived
+    ) {
+        contactsToShow.push({
+            id: "you",
+            name: "You",
+            phone: ""
+        });
+    }
+    contactsToShow.forEach(function(contact) {
+        const messages = phoneState.messages[contact.id] || [];
+        if (messages.length === 0) {
+            return;
+        }
         const lastMessage = messages[messages.length - 1];
         html += `
             <div class="conversation"
                  onclick="openConversation('${contact.id}')">
                 <div class="conversation-avatar">
-                    ${contact.name.charAt(0)}
+                    ${esc(contact.name.charAt(0))}
                 </div>
                 <div class="conversation-info">
                     <div class="conversation-top">
-                        <strong>${contact.name}</strong>
-                        <span>${lastMessage.time}</span>
+                        <strong>${esc(contact.name)}</strong>
+                        <span>${esc(lastMessage.time)}</span>
                     </div>
-                    <p>${lastMessage.text}</p>
+                    <p>${esc(lastMessage.text)}</p>
                 </div>
             </div>
         `;
@@ -300,17 +353,18 @@ contactsToShow.forEach(function(contact) {
     checkStoryProgress();
 }
 function openConversation(id) {
+    backAction = openMessages;
     let contact = phoneState.contacts.find(function(contact) {
-    return contact.id === id;
-});
-if (id === "you") {
-    contact = {
-        id: "you",
-        name: "You",
-        phone: ""
-    };
-}
-    const messages = phoneState.messages[id];
+        return contact.id === id;
+    });
+    if (id === "you") {
+        contact = {
+            id: "you",
+            name: "You",
+            phone: ""
+        };
+    }
+    const messages = phoneState.messages[id] || [];
     appTitle.textContent = contact.name;
     let html = `
         <div class="chat">
@@ -319,9 +373,9 @@ if (id === "you") {
         html += `
             <div class="message-row ${message.sender}">
                 <div class="message-bubble">
-                    ${message.text}
+                    ${esc(message.text)}
                     <span class="message-time">
-                        ${message.time}
+                        ${esc(message.time)}
                     </span>
                 </div>
             </div>
@@ -334,6 +388,7 @@ if (id === "you") {
                 id="messageInput"
                 type="text"
                 placeholder="Type a message..."
+                onkeydown="handleMessageKey(event, '${id}')"
             >
             <button onclick="sendMessage('${id}')">
                 Send
@@ -341,6 +396,12 @@ if (id === "you") {
         </div>
     `;
     appContent.innerHTML = html;
+    appContent.scrollTop = appContent.scrollHeight;
+}
+function handleMessageKey(event, id) {
+    if (event.key === "Enter") {
+        sendMessage(id);
+    }
 }
 function sendMessage(id) {
     const input = document.getElementById("messageInput");
@@ -348,31 +409,48 @@ function sendMessage(id) {
     if (text === "") {
         return;
     }
+    if (!phoneState.messages[id]) {
+        phoneState.messages[id] = [];
+    }
     phoneState.messages[id].push({
         sender: "me",
         text: text,
-        time: "now"
+        time: getCurrentTime()
     });
     savePhone();
     openConversation(id);
+    const newInput = document.getElementById("messageInput");
+    if (newInput) {
+        newInput.focus();
+    }
 }
 function updateClock() {
+    const timeElement = document.getElementById("time");
+    if (!timeElement) {
+        return;
+    }
     const now = new Date();
     let hours = now.getHours();
     const minutes = String(now.getMinutes()).padStart(2, "0");
     const ampm = hours >= 12 ? "PM" : "AM";
     hours = hours % 12;
     hours = hours || 12;
-    document.getElementById("time").textContent =
+    timeElement.textContent =
         `${hours}:${minutes} ${ampm}`;
 }
 function goHome() {
+    backAction = null;
+    currentApp = "home";
     appScreen.classList.add("hidden");
 }
 function goBack() {
-    appScreen.classList.add("hidden");
+    if (appScreen.classList.contains("hidden")) {
+        return;
+    }
+    closeApp();
 }
 function openGallery() {
+    backAction = null;
     phoneState.story.flags.openedGallery = true;
     savePhone();
     appTitle.textContent = "Gallery";
@@ -386,8 +464,8 @@ function openGallery() {
                 onclick="openPhoto(${photo.id})"
             >
                 <img
-                    src="${photo.image}"
-                    alt="${photo.name}"
+                    src="${esc(photo.image)}"
+                    alt="${esc(photo.name)}"
                 >
             </div>
         `;
@@ -399,26 +477,36 @@ function openGallery() {
     checkStoryProgress();
 }
 function openPhoto(id) {
+    backAction = openGallery;
     const photo = phoneState.photos.find(function(photo) {
         return photo.id === id;
     });
+    if (!photo) {
+        openGallery();
+        return;
+    }
+    if (photo.strange && !phoneState.story.flags.strangePhotoFound) {
+        phoneState.story.flags.strangePhotoFound = true;
+        savePhone();
+    }
     appTitle.textContent = photo.name;
     appContent.innerHTML = `
         <div class="photo-viewer">
             <img
-                src="${photo.image}"
-                alt="${photo.name}"
+                src="${esc(photo.image)}"
+                alt="${esc(photo.name)}"
             >
             <div class="photo-details">
-                <strong>${photo.name}</strong>
-                <p>${photo.date}</p>
-                <p>${photo.time}</p>
-                <p>📍 ${photo.location}</p>
+                <strong>${esc(photo.name)}</strong>
+                <p>${esc(photo.date)}</p>
+                <p>${esc(photo.time)}</p>
+                <p>📍 ${esc(photo.location)}</p>
             </div>
         </div>
     `;
 }
 function openBrowser() {
+    backAction = null;
     phoneState.story.flags.openedBrowser = true;
     savePhone();
     appTitle.textContent = "Browser";
@@ -468,6 +556,8 @@ function searchWeb() {
     showSearchResults(query);
 }
 function showSearchResults(query) {
+    backAction = openBrowser;
+    const safeQuery = esc(query);
     appTitle.textContent = "Search";
     appContent.innerHTML = `
         <div class="search-results">
@@ -475,7 +565,7 @@ function showSearchResults(query) {
                 <input
                     id="searchInput"
                     type="text"
-                    value="${query}"
+                    value="${safeQuery}"
                     onkeydown="handleSearch(event)"
                 >
                 <button onclick="searchWeb()">
@@ -485,7 +575,7 @@ function showSearchResults(query) {
             <div class="result">
                 <small>example.com</small>
                 <h3>
-                    Search results for "${query}"
+                    Search results for "${safeQuery}"
                 </h3>
                 <p>
                     These are simulated search results
@@ -495,7 +585,7 @@ function showSearchResults(query) {
             <div class="result">
                 <small>information.net</small>
                 <h3>
-                    More information about ${query}
+                    More information about ${safeQuery}
                 </h3>
                 <p>
                     This is another fake result.
@@ -519,6 +609,7 @@ function handleSearch(event) {
     }
 }
 function openBrowserHistory() {
+    backAction = openBrowser;
     appTitle.textContent = "History";
     let html = `
         <div class="history">
@@ -528,6 +619,10 @@ function openBrowserHistory() {
         .slice()
         .reverse()
         .forEach(function(item) {
+            if (item.strange && !phoneState.story.flags.strangeSearchFound) {
+                phoneState.story.flags.strangeSearchFound = true;
+                savePhone();
+            }
             html += `
                 <div class="history-item">
                     <div class="history-icon">
@@ -535,10 +630,10 @@ function openBrowserHistory() {
                     </div>
                     <div>
                         <strong>
-                            ${item.query}
+                            ${esc(item.query)}
                         </strong>
                         <p>
-                            ${item.time}
+                            ${esc(item.time)}
                         </p>
                     </div>
                 </div>
@@ -561,6 +656,8 @@ function getCurrentTime() {
     return `${hours}:${minutes} ${ampm}`;
 }
 function openNotes() {
+    backAction = null;
+    draftNote = null;
     appTitle.textContent = "Notes";
     let html = `
         <div class="notes-header">
@@ -570,20 +667,20 @@ function openNotes() {
         </div>
         <div class="notes-list">
     `;
-    phoneState.notes.forEach(function(note) {
+    phoneState.notes.slice().reverse().forEach(function(note) {
         html += `
             <div
                 class="note-item"
                 onclick="openNote(${note.id})"
             >
                 <div class="note-title">
-                    ${note.title}
+                    ${esc(note.title)}
                 </div>
                 <div class="note-preview">
-                    ${note.content.substring(0, 60)}
+                    ${esc(note.content.substring(0, 60))}
                 </div>
                 <div class="note-date">
-                    ${note.date}
+                    ${esc(note.date)}
                 </div>
             </div>
         `;
@@ -594,22 +691,30 @@ function openNotes() {
     appContent.innerHTML = html;
 }
 function openNote(id) {
-    const note = phoneState.notes.find(function(note) {
+    backAction = openNotes;
+    let note = phoneState.notes.find(function(note) {
         return note.id === id;
     });
+    if (!note && draftNote && draftNote.id === id) {
+        note = draftNote;
+    }
+    if (!note) {
+        openNotes();
+        return;
+    }
     appTitle.textContent = "Edit Note";
     appContent.innerHTML = `
         <div class="note-editor">
             <input
                 id="noteTitle"
                 type="text"
-                value="${note.title}"
+                value="${esc(note.title)}"
                 placeholder="Title"
             >
             <textarea
                 id="noteContent"
                 placeholder="Write something..."
-            >${note.content}</textarea>
+            >${esc(note.content)}</textarea>
             <div class="note-buttons">
                 <button onclick="saveNote(${note.id})">
                     Save
@@ -625,9 +730,17 @@ function openNote(id) {
     `;
 }
 function saveNote(id) {
-    const note = phoneState.notes.find(function(note) {
+    let note = phoneState.notes.find(function(note) {
         return note.id === id;
     });
+    const isNew = !note;
+    if (isNew && draftNote && draftNote.id === id) {
+        note = draftNote;
+    }
+    if (!note) {
+        openNotes();
+        return;
+    }
     const title =
         document.getElementById("noteTitle").value.trim();
     const content =
@@ -639,25 +752,28 @@ function saveNote(id) {
     note.title = title;
     note.content = content;
     note.date = getCurrentDate();
+    if (isNew) {
+        phoneState.notes.push(note);
+        draftNote = null;
+    }
     savePhone();
     openNotes();
 }
 function createNote() {
-    const newNote = {
+    draftNote = {
         id: Date.now(),
         title: "New Note",
         content: "",
         date: getCurrentDate()
     };
-    phoneState.notes.push(newNote);
-    savePhone();
-    openNote(newNote.id);
+    openNote(draftNote.id);
 }
 function deleteNote(id) {
     phoneState.notes =
         phoneState.notes.filter(function(note) {
             return note.id !== id;
         });
+    draftNote = null;
     savePhone();
     openNotes();
 }
@@ -680,6 +796,8 @@ function getCurrentDate() {
     return `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
 }
 function openCalls() {
+    backAction = null;
+    phoneState.story.flags.openedCalls = true;
     appTitle.textContent = "Calls";
     let html = `
         <div class="calls-header">
@@ -698,20 +816,23 @@ function openCalls() {
             icon = "↙";
             className = "missed";
         }
+        if (call.strange) {
+            phoneState.story.flags.unknownCallerFound = true;
+        }
         html += `
             <div class="call-item"
                  onclick="openCallContact('${call.phone}')">
                 <div class="call-avatar">
-                    ${call.name.charAt(0)}
+                    ${esc(call.name.charAt(0))}
                 </div>
                 <div class="call-info">
-                    <strong>${call.name}</strong>
+                    <strong>${esc(call.name)}</strong>
                     <p class="${className}">
                         ${icon} ${call.type}
                     </p>
                 </div>
                 <div class="call-time">
-                    ${call.time}
+                    ${esc(call.time)}
                 </div>
             </div>
         `;
@@ -720,6 +841,7 @@ function openCalls() {
         </div>
     `;
     appContent.innerHTML = html;
+    savePhone();
 }
 function openCallContact(phone) {
     const contact = phoneState.contacts.find(function(contact) {
@@ -729,14 +851,15 @@ function openCallContact(phone) {
         startCall("Unknown", phone);
         return;
     }
+    backAction = openCalls;
     appTitle.textContent = contact.name;
     appContent.innerHTML = `
         <div class="call-contact">
             <div class="big-call-avatar">
-                ${contact.name.charAt(0)}
+                ${esc(contact.name.charAt(0))}
             </div>
-            <h2>${contact.name}</h2>
-            <p>${contact.phone}</p>
+            <h2>${esc(contact.name)}</h2>
+            <p>${esc(contact.phone)}</p>
             <button class="call-button"
                     onclick="startCall('${contact.name}', '${contact.phone}')">
                 📞 Call
@@ -745,6 +868,7 @@ function openCallContact(phone) {
     `;
 }
 function showContactsForCall() {
+    backAction = openCalls;
     appTitle.textContent = "New Call";
     let html = `
         <div class="contacts-call-list">
@@ -755,11 +879,11 @@ function showContactsForCall() {
             <div class="call-contact-item"
                  onclick="startCall('${contact.name}', '${contact.phone}')">
                 <div class="call-avatar">
-                    ${contact.name.charAt(0)}
+                    ${esc(contact.name.charAt(0))}
                 </div>
                 <div>
-                    <strong>${contact.name}</strong>
-                    <p>${contact.phone}</p>
+                    <strong>${esc(contact.name)}</strong>
+                    <p>${esc(contact.phone)}</p>
                 </div>
             </div>
         `;
@@ -768,14 +892,15 @@ function showContactsForCall() {
     appContent.innerHTML = html;
 }
 function startCall(name, phone) {
+    backAction = openCalls;
     appTitle.textContent = "Calling";
     appContent.innerHTML = `
         <div class="active-call">
             <div class="big-call-avatar">
-                ${name.charAt(0)}
+                ${esc(name.charAt(0))}
             </div>
-            <h2>${name}</h2>
-            <p>${phone}</p>
+            <h2>${esc(name)}</h2>
+            <p>${esc(phone)}</p>
             <div class="calling-text">
                 Calling...
             </div>
@@ -797,6 +922,9 @@ function endCall(name, phone) {
     openCalls();
 }
 function openCamera() {
+    backAction = null;
+    phoneState.story.flags.openedCamera = true;
+    savePhone();
     appTitle.textContent = "Camera";
     appContent.innerHTML = `
         <div class="camera">
@@ -837,13 +965,14 @@ function takePhoto() {
     showPhotoTaken(newPhoto);
 }
 function showPhotoTaken(photo) {
+    backAction = openCamera;
     appTitle.textContent = "Photo Taken";
     appContent.innerHTML = `
         <div class="photo-taken">
-            <img src="${photo.image}" alt="${photo.name}">
-            <h3>${photo.name}</h3>
-            <p>${photo.date}</p>
-            <p>${photo.time}</p>
+            <img src="${esc(photo.image)}" alt="${esc(photo.name)}">
+            <h3>${esc(photo.name)}</h3>
+            <p>${esc(photo.date)}</p>
+            <p>${esc(photo.time)}</p>
             <div class="photo-actions">
                 <button onclick="openGallery()">
                     🖼️ Gallery
@@ -857,13 +986,19 @@ function showPhotoTaken(photo) {
 }
 function switchCamera() {
     const preview = document.querySelector(".camera-preview-text");
-    if (preview.textContent === "CAMERA") {
+    if (!preview) {
+        return;
+    }
+    if (preview.textContent.trim() === "CAMERA") {
         preview.textContent = "FRONT CAMERA";
     } else {
         preview.textContent = "CAMERA";
     }
 }
 function openMaps() {
+    backAction = null;
+    phoneState.story.flags.openedMaps = true;
+    savePhone();
     appTitle.textContent = "Maps";
     appContent.innerHTML = `
         <div class="maps">
@@ -916,6 +1051,8 @@ function handleMapSearch(event) {
     }
 }
 function showMapSearchResult(query) {
+    backAction = openMaps;
+    currentMapQuery = query;
     appTitle.textContent = "Maps";
     appContent.innerHTML = `
         <div class="map-result">
@@ -931,19 +1068,20 @@ function showMapSearchResult(query) {
                     📍
                 </div>
                 <div>
-                    <h3>${query}</h3>
+                    <h3>${esc(query)}</h3>
                     <p>Karachi, Pakistan</p>
                 </div>
             </div>
             <button
                 class="save-location-button"
-                onclick="saveLocation('${query}')">
+                onclick="saveLocation()">
                 ＋ Save Location
             </button>
         </div>
     `;
 }
 function openLocationHistory() {
+    backAction = openMaps;
     appTitle.textContent = "Location History";
     let html = `
         <div class="location-history">
@@ -956,23 +1094,25 @@ function openLocationHistory() {
             </p>
         `;
     } else {
-        phoneState.locations
-            .slice()
-            .reverse()
-            .forEach(function(location) {
-                html += `
-                    <div class="location-item">
-                        <div class="location-icon">
-                            📍
-                        </div>
-                        <div class="location-info">
-                            <strong>${location.name}</strong>
-                            <p>${location.address}</p>
-                            <small>${location.time}</small>
-                        </div>
+        // The list is stored newest-first, so no reverse() needed
+        phoneState.locations.forEach(function(location) {
+            if (location.strange && !phoneState.story.flags.strangeLocationFound) {
+                phoneState.story.flags.strangeLocationFound = true;
+                savePhone();
+            }
+            html += `
+                <div class="location-item">
+                    <div class="location-icon">
+                        📍
                     </div>
-                `;
-            });
+                    <div class="location-info">
+                        <strong>${esc(location.name)}</strong>
+                        <p>${esc(location.address)}</p>
+                        <small>${esc(location.time)}</small>
+                    </div>
+                </div>
+            `;
+        });
     }
     html += `
         </div>
@@ -980,6 +1120,9 @@ function openLocationHistory() {
     appContent.innerHTML = html;
 }
 function openSettings() {
+    backAction = null;
+    phoneState.story.flags.openedSettings = true;
+    savePhone();
     appTitle.textContent = "Settings";
     const settings = phoneState.settings;
     appContent.innerHTML = `
@@ -1004,7 +1147,7 @@ function openSettings() {
                         <strong>Wi-Fi</strong>
                         <p id="wifiStatus">
                             ${settings.wifi
-                                ? settings.wifiName
+                                ? esc(settings.wifiName)
                                 : "Off"}
                         </p>
                     </div>
@@ -1122,6 +1265,7 @@ function toggleWifi() {
     phoneState.settings.wifi =
         !phoneState.settings.wifi;
     savePhone();
+    updateStatusBar();
     openSettings();
 }
 function toggleBluetooth() {
@@ -1143,6 +1287,7 @@ function toggleDarkMode() {
     openSettings();
 }
 function showBattery() {
+    backAction = openSettings;
     appTitle.textContent = "Battery";
     const battery =
         phoneState.settings.battery;
@@ -1168,6 +1313,7 @@ function showBattery() {
     `;
 }
 function showStorage() {
+    backAction = openSettings;
     appTitle.textContent = "Storage";
     appContent.innerHTML = `
         <div class="storage-screen">
@@ -1202,6 +1348,7 @@ function showStorage() {
     `;
 }
 function showDeviceInfo() {
+    backAction = openSettings;
     appTitle.textContent = "About Phone";
     appContent.innerHTML = `
         <div class="device-info">
@@ -1271,17 +1418,69 @@ function firstStoryMessage() {
     });
     savePhone();
     phoneEvent("message", {
-    message: "New message from You"
-});
-schedulePhoneEvent(
-    "notification",
-    {
-        title: "System",
-        message: "Location access was used recently.",
-        icon: "📍"
-    },
-    8000
-);
+        message: "New message from You",
+        action: function() {
+            openApp("messages");
+        }
+    });
+    schedulePhoneEvent(
+        "notification",
+        {
+            title: "System",
+            message: "Location access was used recently.",
+            icon: "📍"
+        },
+        8000
+    );
+    if (
+        !appScreen.classList.contains("hidden") &&
+        appTitle.textContent === "Messages"
+    ) {
+        openMessages();
+    }
+}
+function createStrangePhoto() {
+    phoneState.photos.push({
+        id: Date.now(),
+        name: "IMG_1007.jpg",
+        date: getCurrentDate(),
+        time: "3:03 AM",
+        location: "Unknown",
+        image: "https://picsum.photos/seed/strange-photo/600/600",
+        strange: true
+    });
+    savePhone();
+    phoneEvent("photo");
+}
+function createStrangeSearch() {
+    phoneState.browserHistory.push({
+        query: "how to disappear completely",
+        time: "3:12 AM",
+        strange: true
+    });
+    savePhone();
+}
+function createStrangeLocation() {
+    phoneState.locations.unshift({
+        id: Date.now(),
+        name: "Unknown Location",
+        address: "Karachi, Pakistan",
+        time: "Today, 3:03 AM",
+        strange: true
+    });
+    savePhone();
+    phoneEvent("location");
+}
+function createUnknownCaller() {
+    phoneState.calls.unshift({
+        name: "Unknown",
+        phone: "0301-9876543",
+        type: "missed",
+        time: "Today, " + getCurrentTime(),
+        strange: true
+    });
+    savePhone();
+    phoneEvent("call", { name: "Unknown" });
 }
 function checkStoryProgress() {
     const flags = phoneState.story.flags;
@@ -1297,18 +1496,24 @@ function checkStoryProgress() {
     }
 }
 function showNotification(title, message, icon = "🔔", action = null) {
+    if (!phoneState.settings.notifications) {
+        return;
+    }
     const container =
         document.getElementById("notificationContainer");
+    if (!container) {
+        return;
+    }
     const notification =
         document.createElement("div");
     notification.className = "notification";
     notification.innerHTML = `
         <div class="notification-icon">
-            ${icon}
+            ${esc(icon)}
         </div>
         <div class="notification-content">
-            <strong>${title}</strong>
-            <p>${message}</p>
+            <strong>${esc(title)}</strong>
+            <p>${esc(message)}</p>
         </div>
     `;
     if (action) {
@@ -1382,7 +1587,11 @@ function strangeNotification() {
     });
 }
 function saveLocation(name) {
-    phoneState.locations.push({
+    name = name || currentMapQuery;
+    if (!name) {
+        return;
+    }
+    phoneState.locations.unshift({
         id: Date.now(),
         name: name,
         address: "Karachi, Pakistan",
@@ -1391,6 +1600,7 @@ function saveLocation(name) {
     savePhone();
     openLocationHistory();
 }
+loadPhone();
 updateClock();
 setInterval(updateClock, 1000);
-loadPhone();
+updateStatusBar();
